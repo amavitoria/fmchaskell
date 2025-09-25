@@ -34,7 +34,8 @@ infixl 6 +
 
 -- Output: O means False, S O means True
 isZero :: Nat -> Nat
-isZero = undefined
+isZero 0 = S 0
+isZero _ = 0
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
