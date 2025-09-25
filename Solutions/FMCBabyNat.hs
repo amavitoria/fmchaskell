@@ -34,32 +34,32 @@ infixl 6 +
 
 -- Output: O means False, S O means True
 isZero :: Nat -> Nat
-isZero 0 = S 0
-isZero _ = 0
+isZero O = S O
+isZero _ = O
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
-pred 0 = 0
+pred O = O
 pred (S n) = n
 
 -- Output: O means False, S O means True
 even :: Nat -> Nat
-even 0 = S 0
-even (S 0) = 0
+even O = S O
+even (S O) = O
 even (S (S n)) = even n
 
 odd :: Nat -> Nat
-odd 0 = 0
-odd (S 0) = S 0
+odd O = O
+odd (S O) = S O
 odd (S (S n)) = odd n
 
 -- This is called the dotminus or monus operator
 -- (also: proper subtraction, arithmetic subtraction, ...).
--- It behaves like subtraction, except that it returns 0
+-- It behaves like subtraction, except that it returns O
 -- when "normal" subtraction would return a negative number.
 monus :: Nat -> Nat -> Nat
-monus n 0 = n
-monus 0 _ = 0
+monus n O = n
+monus O _ = O
 monus (S n) (S m) = monus n m
 
 (-*) :: Nat -> Nat -> Nat
@@ -67,14 +67,14 @@ monus (S n) (S m) = monus n m
 
 -- multiplication
 (*) :: Nat -> Nat -> Nat
-n * 0 = 0
+n * O = O
 n * (S m) = n + (n * m)
 
 infixl 7 *
 
 -- exponentiation
 (^) :: Nat -> Nat -> Nat
-n ^ 0 = S 0
+n ^ O = S O
 n ^ (S m) = n * (n ^ m)
 
 -- decide: infix? ? ^
@@ -103,13 +103,13 @@ absDiff n m = (n -* m) + (m -* n)
 (|-|) = absDiff
 
 factorial :: Nat -> Nat
-factorial 0 = S 0
+factorial O = S O
 factorial (S n) = (S n) * (factorial n)
 
--- signum of a number (-1, 0, or 1)
+-- signum of a number (-1, O, or 1)
 sg :: Nat -> Nat
-sg 0 = 0
-sg _ = S 0
+sg O = O
+sg _ = S O
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
