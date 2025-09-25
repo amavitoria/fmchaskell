@@ -39,34 +39,43 @@ isZero _ = 0
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
-pred = undefined
+pred 0 = 0
+pred (S n) = n
 
 -- Output: O means False, S O means True
 even :: Nat -> Nat
-even = undefined
+even 0 = S 0
+even (S 0) = 0
+even (S (S n)) = even n
 
 odd :: Nat -> Nat
-odd = undefined
+odd 0 = 0
+odd (S 0) = S 0
+odd (S (S n)) = odd n
 
 -- This is called the dotminus or monus operator
 -- (also: proper subtraction, arithmetic subtraction, ...).
 -- It behaves like subtraction, except that it returns 0
 -- when "normal" subtraction would return a negative number.
 monus :: Nat -> Nat -> Nat
-monus = undefined
+monus n 0 = n
+monus 0 _ = 0
+monus (S n) (S m) = monus n m
 
 (-*) :: Nat -> Nat -> Nat
 (-*) = monus
 
 -- multiplication
 (*) :: Nat -> Nat -> Nat
-(*) = undefined
+n * 0 = 0
+n * (S m) = n + (n * m)
 
 infixl 7 *
 
 -- exponentiation
 (^) :: Nat -> Nat -> Nat
-(^) = undefined
+n ^ 0 = S 0
+n ^ (S m) = n * (n ^ m)
 
 -- decide: infix? ? ^
 
@@ -88,17 +97,19 @@ infixl 7 *
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the actual minus operator we know from the integers!)
 absDiff :: Nat -> Nat -> Nat
-absDiff = undefined
+absDiff n m = (n -* m) + (m -* n)
 
 (|-|) :: Nat -> Nat -> Nat
 (|-|) = absDiff
 
 factorial :: Nat -> Nat
-factorial = undefined
+factorial 0 = S 0
+factorial (S n) = (S n) * (factorial n)
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
-sg = undefined
+sg 0 = 0
+sg _ = S 0
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
