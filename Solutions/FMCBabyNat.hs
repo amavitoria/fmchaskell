@@ -81,11 +81,13 @@ n ^ (S m) = n * (n ^ m)
 
 -- quotient
 (/) :: Nat -> Nat -> Nat
-(/) = undefined
+_ / O = undefined
+n / (S m) = 
 
 -- remainder
 (%) :: Nat -> Nat -> Nat
-(%) = undefined
+_ % O = undefined
+n % (S m) = 
 
 -- divides
 -- just for a change, we start by defining the "symbolic" operator
