@@ -64,6 +64,7 @@ monus (S n) (S m) = monus n m
 
 (-*) :: Nat -> Nat -> Nat
 (-*) = monus
+infixl 6 -*
 
 -- multiplication
 (*) :: Nat -> Nat -> Nat
@@ -87,19 +88,28 @@ n / (S m) =
   case n -* m of
     O -> O
     _ -> S ((n -* S m) / S m)
+infixl 7 /
 
 -- remainder
 (%) :: Nat -> Nat -> Nat
 _ % O = undefined
 n % (S m) = n -* ((n / S m) * S m)
-infixl 
+infixl 7 %
 
 -- divides
 -- just for a change, we start by defining the "symbolic" operator
 -- and then define `devides` as a synonym to it
 -- again, outputs: O means False, S O means True
 (|||) :: Nat -> Nat -> Nat
+O ||| O = S O
+O ||| n = O
+n ||| O = S O
+n ||| m = 
+  case m % n of
+    O -> S O 
+    _ -> O
 
+infixl 5 |||
 
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the actual minus operator we know from the integers!)
@@ -120,5 +130,21 @@ sg _ = S O
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
-lo = undefined
+lo O O = undefined
+lo _ O = undefined
+lo O _ = undefined
+lo (S O) (S O) = undefined
+lo (S O) _ = undefined
+lo _ (S O) = O
+lo b a = 
+  case a < b of
+    O -> S (lo b (a / b))
+    _ -> O
 
+
+--extra, less than
+(<)::Nat->Nat->Nat
+O < O = O
+O < _ = S O
+_ < O = O
+S n < S m = n < m
