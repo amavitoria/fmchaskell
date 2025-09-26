@@ -68,33 +68,38 @@ monus (S n) (S m) = monus n m
 -- multiplication
 (*) :: Nat -> Nat -> Nat
 n * O = O
-n * (S m) = n + (n * m)
+n * (S m) = n + n * m
 
 infixl 7 *
 
 -- exponentiation
 (^) :: Nat -> Nat -> Nat
 n ^ O = S O
-n ^ (S m) = n * (n ^ m)
+n ^ (S m) = n * n ^ m
 
--- decide: infix? ? ^
+infixr 8 ^
 
 -- quotient
 (/) :: Nat -> Nat -> Nat
 _ / O = undefined
+O / _ = O
 n / (S m) = 
+  case n -* m of
+    O -> O
+    _ -> S ((n -* S m) / S m)
 
 -- remainder
 (%) :: Nat -> Nat -> Nat
 _ % O = undefined
-n % (S m) = 
+n % (S m) = n -* ((n / S m) * S m)
+infixl 
 
 -- divides
 -- just for a change, we start by defining the "symbolic" operator
 -- and then define `devides` as a synonym to it
 -- again, outputs: O means False, S O means True
 (|||) :: Nat -> Nat -> Nat
-(|||) = undefined
+
 
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the actual minus operator we know from the integers!)
