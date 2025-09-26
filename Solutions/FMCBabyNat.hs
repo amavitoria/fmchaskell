@@ -139,7 +139,7 @@ lo _ (S O) = O
 lo b a = 
   case a < b of
     O -> S (lo b (a / b))
-    _ -> O
+    S O -> O
 
 
 --extra, less than
