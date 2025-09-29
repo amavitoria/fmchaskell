@@ -152,11 +152,11 @@ O </> _ = O
 n </> (S m) = 
   case n - m of
     O -> O
-    _ -> S ((</>) (n - S m) (S m))
+    _ -> S ((n - S m) </> (S m))
 
 -- remainder
 (<%>) :: Nat -> Nat -> Nat
-_ <%> O = error "divisão por zero"
+_ <%> O = undefined
 n <%> (S m) = n - ((n </> S m) * S m)
 
 
