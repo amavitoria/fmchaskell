@@ -34,23 +34,35 @@ instance Show Nat where
 
     -- zero  should be shown as O
     -- three should be shown as SSSO
-    show = undefined
+    show O = "O"
+    show (S n) = "S" ++ show n
 
 instance Eq Nat where
 
-    (==) = undefined
+    (==) O O = True
+    (==) _ O = False
+    (==) O _ = False
+    (==) (S n) (S m) = (==) n m 
 
 instance Ord Nat where
 
-    (<=) = undefined
+    (<=) O O = True
+    (<=) O _ = True
+    (<=) _ O = False
+    (<=) (S n) (S m) = (<=) n m
+
 
     -- Ord does not REQUIRE defining min and max.
     -- Howevener, you should define them WITHOUT using (<=).
     -- Both are binary functions: max m n = ..., etc.
 
-    min = undefined
+    min O n = O
+    min n O = O
+    min (S n) (S m) = S(min n m) 
 
-    max = undefined
+    max O n = n
+    max n O = n
+    max (S n) (S m) = S(max n m) 
 
 
 ----------------------------------------------------------------
@@ -73,17 +85,23 @@ eight = S seven
 ----------------------------------------------------------------
 
 isZero :: Nat -> Bool
-isZero = undefined
+isZero O = True
+isZero _ = False 
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
-pred = undefined
+pred O = O
+pred (S n) = n
 
 even :: Nat -> Bool
-even = undefined
+even O = True
+even (S O) = False
+even (S (S n)) = even n
 
 odd :: Nat -> Bool
-odd = undefined
+odd O = False
+odd (S O) = True
+odd (S (S n)) = odd n
 
 
 ----------------------------------------------------------------
@@ -92,50 +110,69 @@ odd = undefined
 
 -- addition
 (<+>) :: Nat -> Nat -> Nat
-(<+>) = undefined
+n <+> O   = n
+n <+> (S m) = S (n <+> m)
 
 -- This is called the dotminus or monus operator
 -- (also: proper subtraction, arithmetic subtraction, ...).
 -- It behaves like subtraction, except that it returns 0
 -- when "normal" subtraction would return a negative number.
 monus :: Nat -> Nat -> Nat
-monus = undefined
+monus n O = n
+monus O _ = O
+monus (S n) (S m) = monus n m
 
-(-*) :: Nat -> Nat -> Nat
-(-*) = undefined
+(<->) :: Nat -> Nat -> Nat
+(<->) = monus
 
 -- multiplication
 times :: Nat -> Nat -> Nat
-times = undefined
+times n O = O
+times n (S m) = n + times n m
 
 (<*>) :: Nat -> Nat -> Nat
 (<*>) = times
 
 -- power / exponentiation
 pow :: Nat -> Nat -> Nat
-pow = undefined
+pow n O = S O
+pow n (S m) = n * pow n m
+
 
 exp :: Nat -> Nat -> Nat
-exp = undefined
+exp = pow
 
 (<^>) :: Nat -> Nat -> Nat
-(<^>) = undefined
+(<^>) = pow
 
 -- quotient
 (</>) :: Nat -> Nat -> Nat
-(</>) = undefined
+_ </> O = undefined
+O </> _ = O
+n </> (S m) = 
+  case n - m of
+    O -> O
+    _ -> S ((</>) (n - S m) (S m))
 
 -- remainder
 (<%>) :: Nat -> Nat -> Nat
-(<%>) = undefined
+_ <%> O = error "divisão por zero"
+n <%> (S m) = n - ((n </> S m) * S m)
+
 
 -- euclidean division
 eucdiv :: (Nat, Nat) -> (Nat, Nat)
-eucdiv = undefined
+eucdiv (n, m) = (n </> m, n <%> m)
 
 -- divides
 (<|>) :: Nat -> Nat -> Bool
-(<|>) = undefined
+(<|>) O O = True
+(<|>) O n = False
+(<|>) n O = True
+(<|>) n m = 
+  case m <%> n of
+    O -> True
+    _ -> False
 
 divides = (<|>)
 
@@ -144,20 +181,31 @@ divides = (<|>)
 -- x `dist` y = |x - y|
 -- (Careful here: this - is the real minus operator!)
 dist :: Nat -> Nat -> Nat
-dist = undefined
+dist n m = (n - m) + (m - n)
 
 (|-|) = dist
 
 factorial :: Nat -> Nat
-factorial = undefined
+factorial O = S O
+factorial (S n) = (S n) * (factorial n)
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
-sg = undefined
+sg O = O
+sg _ = S O
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
-lo = undefined
+lo O O = undefined
+lo _ O = undefined
+lo O _ = undefined
+lo (S O) (S O) = undefined
+lo (S O) _ = undefined
+lo _ (S O) = O
+lo b a = 
+  case a < b of
+    False -> S (lo b (a </> b))
+    True -> O
 
 
 ----------------------------------------------------------------
@@ -168,11 +216,12 @@ lo = undefined
 -- Do NOT use the following functions in the definitions above!
 
 toNat :: Integral a => a -> Nat
-toNat = undefined
+toNat 0 = O
+toNat n = S (toNat (n-1))
 
 fromNat :: Integral a => Nat -> a
-fromNat = undefined
-
+fromNat O = 0
+fromNat (S n) = 1 + fromNat n
 
 -- Voilá: we can now easily make Nat an instance of Num.
 instance Num Nat where
@@ -184,6 +233,6 @@ instance Num Nat where
     signum = sg
     fromInteger x
       | x < 0     = undefined
-      | x == 0    = undefined
-      | otherwise = undefined
+      | x == 0    = O
+      | otherwise = toNat x
 
