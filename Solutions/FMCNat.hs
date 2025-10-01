@@ -58,11 +58,11 @@ instance Ord Nat where
 
     min O n = O
     min n O = O
-    min (S n) (S m) = S(min n m) 
+    min (S n) (S m) = S (min n m) 
 
     max O n = n
     max n O = n
-    max (S n) (S m) = S(max n m) 
+    max (S n) (S m) = S (max n m) 
 
 
 ----------------------------------------------------------------
@@ -147,22 +147,27 @@ exp = pow
 
 -- quotient
 (</>) :: Nat -> Nat -> Nat
-_ </> O = undefined
-O </> _ = O
-n </> (S m) = 
-  case n - m of
-    O -> O
-    _ -> S ((n - S m) </> (S m))
+n </> m = (fst . eucdiv) (n, m)
 
 -- remainder
 (<%>) :: Nat -> Nat -> Nat
-_ <%> O = undefined
-n <%> (S m) = n - ((n </> S m) * S m)
+n <%> m = (snd . eucdiv) (n, m)
 
+-- 
+fst :: (a, a) -> a
+fst (n, _) = n
+
+snd :: (a, a) -> a
+snd (_, m) = m
 
 -- euclidean division
 eucdiv :: (Nat, Nat) -> (Nat, Nat)
-eucdiv (n, m) = (n </> m, n <%> m)
+eucdiv (_, O) = undefined
+eucdiv (n, m)
+  | n < m  = (O, n)
+  | otherwise  =
+     let (q, r) = eucdiv (n <-> m, m)
+      in (S q, r)
 
 -- divides
 (<|>) :: Nat -> Nat -> Bool
