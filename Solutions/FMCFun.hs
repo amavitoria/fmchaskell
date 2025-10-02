@@ -27,7 +27,7 @@ flip f m n = f n m
 
 -- (.) takes two composable functions and returns their composition
 (.)::(a -> b) -> (b -> c) -> (a -> c)
-(f . g) x = f (g x)
+(f . g) x = g (f x)
 
 -- (.>) is composition but in diagramatic notation (should be ; but Haskell forbids)
 (.>) = flip (.)
