@@ -13,7 +13,7 @@ import Prelude hiding
 -- curry takes a "traditional" binary function
 -- and returns its currified version
 curry :: ((a,b) -> c) -> (a -> b -> c)
-curry f n m = f(n,m)
+curry f n m = f (n,m)
 
 -- uncurry takes a currified function
 -- and returns its "traditional" binary version
